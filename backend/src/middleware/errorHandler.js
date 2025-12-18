@@ -1,4 +1,4 @@
-const AppError = require('../utils/AppError');
+import AppError from '../utils/AppError.js';
 
 const errorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
@@ -29,4 +29,4 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-module.exports = errorHandler;
+export default errorHandler;

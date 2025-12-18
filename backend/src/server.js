@@ -1,12 +1,19 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
-const connectDB = require('./config/database');
-const errorHandler = require('./middleware/errorHandler');
-const AppError = require('./utils/AppError');
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
+import connectDB from './config/database.js';
+import errorHandler from './middleware/errorHandler.js';
+import AppError from './utils/AppError.js';
+
+// Import routes
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import groupRoutes from './routes/groupRoutes.js';
+import expenseRoutes from './routes/expenseRoutes.js';
+import settlementRoutes from './routes/settlementRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -56,11 +63,11 @@ app.get('/health', (req, res) => {
 });
 
 // API Routes
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/groups', require('./routes/groupRoutes'));
-app.use('/api/expenses', require('./routes/expenseRoutes'));
-app.use('/api/settlements', require('./routes/settlementRoutes'));
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/groups', groupRoutes);
+app.use('/api/expenses', expenseRoutes);
+app.use('/api/settlements', settlementRoutes);
 
 // Handle undefined routes
 app.all('*', (req, res, next) => {
@@ -96,4 +103,4 @@ process.on('SIGTERM', () => {
   });
 });
 
-module.exports = app;
+export default app;
