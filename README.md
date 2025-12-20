@@ -122,6 +122,7 @@ The application follows a layered MVC architecture pattern:
 │   MongoDB       │
 └─────────────────┘
 ```
+<img src="https://github.com/Ranj8521Kumar/Expense-Sharing-Application/blob/main/Expense%20Sharing%20Application%20Archtecture.png"> </img>
 
 ---
 
@@ -806,3 +807,4 @@ This project is licensed under the **ISC License**.
 Made with ❤️ by [Ranj8521Kumar](https://github.com/Ranj8521Kumar)
 
 </div>
+
