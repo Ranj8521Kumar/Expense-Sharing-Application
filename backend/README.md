@@ -123,6 +123,9 @@ The application follows a layered MVC architecture pattern:
 └─────────────────┘
 ```
 
+<img src="https://github.com/Ranj8521Kumar/Expense-Sharing-Application/blob/main/Expense%20Sharing%20Application%20Archtecture.png"> </img>
+
+
 ---
 
 ## 🛠️ Tech Stack
