@@ -19,7 +19,11 @@ export const addExpense = catchAsync(async (req, res, next) => {
     customSplits,
     date,
     notes,
+    paidBy: paidByInput,
   } = req.body;
+
+  // paidBy defaults to the logged-in user but can be any group member
+  const paidBy = paidByInput || req.user._id;
 
   // Verify group exists and user is a member
   const group = await Group.findById(groupId);
@@ -35,14 +39,30 @@ export const addExpense = catchAsync(async (req, res, next) => {
     return next(new AppError('You are not a member of this group', 403));
   }
 
+  // Validate that paidBy is a group member
+  const paidByIsGroupMember = group.members.some(
+    (member) => member.user.toString() === paidBy.toString()
+  );
+  if (!paidByIsGroupMember) {
+    return next(new AppError('The payer must be a member of this group', 400));
+  }
+
   // Calculate splits
   let splits;
+  const activeMembers = (members && members.length > 0)
+    ? members
+    : group.members.map((member) => member.user.toString());
+
   if (splitType === 'equal') {
-    splits = calculateSplit(amount, splitType, members);
+    splits = calculateSplit(amount, splitType, activeMembers);
   } else if (splitType === 'exact') {
-    splits = calculateSplit(amount, splitType, members, customSplits);
+    splits = calculateSplit(amount, splitType, activeMembers, customSplits);
   } else if (splitType === 'percentage') {
-    splits = calculateSplit(amount, splitType, members, customSplits);
+    splits = calculateSplit(amount, splitType, activeMembers, customSplits);
+  }
+
+  if (!splits || splits.length === 0) {
+    return next(new AppError('No split details could be calculated. Please check your inputs.', 400));
   }
 
   // Verify all split members are in the group
@@ -61,7 +81,7 @@ export const addExpense = catchAsync(async (req, res, next) => {
   const expense = await Expense.create({
     description,
     amount,
-    paidBy: req.user._id,
+    paidBy,
     group: groupId,
     category,
     splitType,
