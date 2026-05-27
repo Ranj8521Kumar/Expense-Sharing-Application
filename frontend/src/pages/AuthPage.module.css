@@ -1,0 +1,183 @@
+/* Shared auth page styles for Login & Register */
+.page {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Left brand panel */
+.brand {
+  flex: 1;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle radial glow */
+.brand::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(245, 166, 35, 0.08) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.brandContent {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  position: relative;
+}
+
+.brandLogo {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  background: var(--accent-dim);
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.brandTitle {
+  font-size: 2.75rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.brandTagline {
+  font-size: 1.0625rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 320px;
+}
+
+.features { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+.featureDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Demo balance card */
+.demoCard {
+  margin-top: var(--space-4);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.demoLabel {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+}
+
+.demoAmount {
+  font-family: var(--font-mono);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--positive);
+  letter-spacing: -0.03em;
+  text-shadow: 0 0 40px var(--positive-glow);
+}
+
+.demoSub {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+/* Right form panel */
+.formPanel {
+  width: min(480px, 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+  background: var(--bg-base);
+}
+
+.formBox {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.formHeader { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.formTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+}
+
+.formSub { color: var(--text-secondary); font-size: 0.9375rem; }
+
+.form { display: flex; flex-direction: column; gap: var(--space-4); }
+
+.serverError {
+  background: var(--negative-dim);
+  border: 1px solid rgba(244, 63, 94, 0.25);
+  color: var(--negative);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 0.875rem;
+}
+
+.switchText {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.switchLink {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.switchLink:hover { color: var(--accent-hover); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page { flex-direction: column; }
+  .brand { display: none; }
+  .formPanel {
+    width: 100%;
+    padding: var(--space-6) var(--space-5);
+    align-items: flex-start;
+    padding-top: var(--space-12);
+  }
+}

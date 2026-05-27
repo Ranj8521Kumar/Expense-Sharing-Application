@@ -1,0 +1,72 @@
+.wrapper { display: flex; flex-direction: column; gap: 6px; }
+
+.label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+}
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-smooth),
+              box-shadow var(--duration-fast) var(--ease-smooth),
+              background var(--duration-fast) var(--ease-smooth);
+}
+
+.input::placeholder { color: var(--text-tertiary); }
+
+.input:focus {
+  border-color: var(--accent);
+  background: var(--bg-overlay);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.inputWrap.hasError .input {
+  border-color: var(--negative);
+  box-shadow: 0 0 0 3px var(--negative-dim);
+}
+
+.hasLeft { padding-left: 40px; }
+.hasRight { padding-right: 40px; }
+
+.leftIcon, .rightIcon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.leftIcon { left: 12px; }
+.rightIcon { right: 12px; }
+
+.error {
+  font-size: 0.8125rem;
+  color: var(--negative);
+}
+
+.hint {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+}
+
+/* Select variant */
+select.input {
+  cursor: pointer;
+  appearance: none;
+}

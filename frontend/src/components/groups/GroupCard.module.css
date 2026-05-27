@@ -1,0 +1,119 @@
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-smooth);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  outline: none;
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-elevated);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.card:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.iconWrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.body { flex: 1; }
+
+.name {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.desc {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.members {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--text-tertiary);
+  font-size: 0.8125rem;
+  flex: 1;
+}
+
+.totalWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+.totalLabel {
+  font-size: 0.6875rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.total {
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.chevron {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  transition: transform var(--duration-fast) var(--ease-smooth);
+}
+
+.card:hover .chevron { transform: translateX(3px); }

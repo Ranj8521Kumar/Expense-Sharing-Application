@@ -1,0 +1,85 @@
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.card.positive {
+  border-color: rgba(34, 197, 94, 0.15);
+}
+
+.card.negative {
+  border-color: rgba(244, 63, 94, 0.15);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+}
+
+.indicatorPos { background: var(--positive-dim); color: var(--positive); }
+.indicatorNeg { background: var(--negative-dim); color: var(--negative); }
+
+.label {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.body { display: flex; align-items: center; gap: var(--space-3); }
+
+.info { flex: 1; min-width: 0; }
+
+.userName {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.userEmail {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.amount {
+  font-family: var(--font-mono);
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.amountPos { color: var(--positive); }
+.amountNeg { color: var(--negative); }

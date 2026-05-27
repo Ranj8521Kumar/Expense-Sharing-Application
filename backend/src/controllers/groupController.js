@@ -164,15 +164,20 @@ export const addMember = catchAsync(async (req, res, next) => {
 
   const group = req.group;
 
-  // Check if user exists
-  const user = await User.findById(userId);
+  // Check if user exists (by ID or by Email)
+  const isEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userId);
+  const query = isEmail ? { email: userId.toLowerCase() } : { _id: userId };
+  const user = await User.findOne(query);
+
   if (!user) {
-    return next(new AppError('User not found', 404));
+    return next(new AppError('User not found with the provided ID or email', 404));
   }
+
+  const actualUserId = user._id.toString();
 
   // Check if user is already a member
   const isMember = group.members.some(
-    (member) => member.user.toString() === userId
+    (member) => member.user.toString() === actualUserId
   );
 
   if (isMember) {
@@ -180,11 +185,11 @@ export const addMember = catchAsync(async (req, res, next) => {
   }
 
   // Add member
-  group.members.push({ user: userId, isAdmin: false });
+  group.members.push({ user: actualUserId, isAdmin: false });
   await group.save();
 
   // Update user's groups array
-  await User.findByIdAndUpdate(userId, {
+  await User.findByIdAndUpdate(actualUserId, {
     $addToSet: { groups: group._id },
   });
 

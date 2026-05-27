@@ -1,0 +1,95 @@
+.page { display: flex; flex-direction: column; gap: var(--space-6); padding-bottom: var(--space-12); }
+
+.header { margin-bottom: var(--space-2); }
+.title { font-size: 2rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.03em; }
+.subtitle { color: var(--text-tertiary); font-size: 0.9rem; margin-top: 2px; }
+
+/* User card */
+.userCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+
+.userInfo { display: flex; flex-direction: column; gap: 4px; }
+.userName { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
+.userEmail { font-size: 0.9375rem; color: var(--text-secondary); }
+.userSince { font-size: 0.8125rem; color: var(--text-tertiary); margin-top: 4px; }
+
+/* Sections */
+.sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sectionHeader { border-bottom: 1px solid var(--border-subtle); padding-bottom: var(--space-4); }
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.form { display: flex; flex-direction: column; gap: var(--space-4); }
+
+.formActions { display: flex; justify-content: flex-end; }
+
+.errorMsg {
+  background: var(--negative-dim);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  color: var(--negative);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 0.875rem;
+}
+
+.successMsg {
+  background: var(--positive-dim);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: var(--positive);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 0.875rem;
+}
+
+/* Account details */
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.detailRow:last-child { border-bottom: none; }
+
+.detailLabel { font-size: 0.875rem; color: var(--text-tertiary); font-weight: 500; }
+
+.detailValue {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  text-align: right;
+  word-break: break-all;
+  max-width: 220px;
+}
+
+@media (max-width: 900px) {
+  .sections { grid-template-columns: 1fr; }
+}
