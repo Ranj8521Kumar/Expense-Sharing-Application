@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, Phone, Wallet } from 'lucide-react';
+import { Mail, Lock, User, Phone, Wallet, CheckCircle } from 'lucide-react';
 import { authApi } from '../api/auth';
+import { invitationsApi } from '../api/invitations';
 import { useAuthStore } from '../store/authStore';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
@@ -11,6 +12,9 @@ import styles from './AuthPage.module.css';
 
 export function RegisterPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const inviteToken = searchParams.get('invite'); // may be null
+
   const setAuth = useAuthStore((s) => s.setAuth);
   const [serverError, setServerError] = useState('');
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
@@ -21,11 +25,23 @@ export function RegisterPage() {
       const res = await authApi.register(data);
       const { user, token } = res.data.data;
       setAuth(user, token);
-      navigate('/');
+
+      // If arrived via an invite link → accept it immediately after registration
+      if (inviteToken) {
+        try {
+          await invitationsApi.accept(inviteToken);
+        } catch {
+          // Ignore acceptance errors — user is still registered
+        }
+        navigate('/groups');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       setServerError(err.response?.data?.message || 'Registration failed. Please try again.');
     }
   };
+
 
   return (
     <div className={styles.page}>
@@ -70,6 +86,20 @@ export function RegisterPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
+          {inviteToken && (
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '10px',
+              background: 'rgba(245,166,35,0.1)', border: '1px solid rgba(245,166,35,0.25)',
+              borderRadius: '10px', padding: '12px 16px', marginBottom: '4px',
+            }}>
+              <CheckCircle size={18} style={{ color: 'var(--accent)', flexShrink: 0 }} />
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                <strong style={{ color: 'var(--accent)' }}>Group invite detected!</strong>
+                {' '}Register below and you'll be automatically added to the group.
+              </p>
+            </div>
+          )}
+
           <div className={styles.formHeader}>
             <h2 className={styles.formTitle}>Create account</h2>
             <p className={styles.formSub}>Start splitting expenses smarter</p>
@@ -129,7 +159,7 @@ export function RegisterPage() {
 
           <p className={styles.switchText}>
             Already have an account?{' '}
-            <Link to="/login" className={styles.switchLink}>Sign in</Link>
+            <Link to={inviteToken ? `/login?invite=${inviteToken}` : '/login'} className={styles.switchLink}>Sign in</Link>
           </p>
         </motion.div>
       </div>

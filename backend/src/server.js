@@ -14,6 +14,7 @@ import userRoutes from './routes/userRoutes.js';
 import groupRoutes from './routes/groupRoutes.js';
 import expenseRoutes from './routes/expenseRoutes.js';
 import settlementRoutes from './routes/settlementRoutes.js';
+import invitationRoutes from './routes/invitationRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -68,6 +69,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/settlements', settlementRoutes);
+app.use('/api/invitations', invitationRoutes);
 
 // Handle undefined routes
 app.all('*', (req, res, next) => {

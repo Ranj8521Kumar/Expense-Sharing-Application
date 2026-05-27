@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Wallet } from 'lucide-react';
+import { Mail, Lock, Wallet, CheckCircle } from 'lucide-react';
 import { authApi } from '../api/auth';
+import { invitationsApi } from '../api/invitations';
 import { useAuthStore } from '../store/authStore';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
@@ -11,6 +12,9 @@ import styles from './AuthPage.module.css';
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const inviteToken = searchParams.get('invite'); // may be null
+
   const setAuth = useAuthStore((s) => s.setAuth);
   const [serverError, setServerError] = useState('');
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
@@ -21,7 +25,18 @@ export function LoginPage() {
       const res = await authApi.login(data);
       const { user, token } = res.data.data;
       setAuth(user, token);
-      navigate('/');
+
+      // If arrived via an invite link → accept it immediately after login
+      if (inviteToken) {
+        try {
+          await invitationsApi.accept(inviteToken);
+        } catch {
+          // Ignore acceptance errors — user is still logged in
+        }
+        navigate('/groups');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       setServerError(err.response?.data?.message || 'Login failed. Please try again.');
     }
@@ -82,6 +97,20 @@ export function LoginPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
+          {inviteToken && (
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '10px',
+              background: 'rgba(245,166,35,0.1)', border: '1px solid rgba(245,166,35,0.25)',
+              borderRadius: '10px', padding: '12px 16px', marginBottom: '12px',
+            }}>
+              <CheckCircle size={18} style={{ color: 'var(--accent)', flexShrink: 0 }} />
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                <strong style={{ color: 'var(--accent)' }}>Group invite detected!</strong>
+                {' '}Log in below and you'll be automatically added to the group.
+              </p>
+            </div>
+          )}
+
           <div className={styles.formHeader}>
             <h2 className={styles.formTitle}>Welcome back</h2>
             <p className={styles.formSub}>Sign in to your SplitLedger account</p>
@@ -119,7 +148,7 @@ export function LoginPage() {
 
           <p className={styles.switchText}>
             Don't have an account?{' '}
-            <Link to="/register" className={styles.switchLink}>Create one</Link>
+            <Link to={inviteToken ? `/register?invite=${inviteToken}` : '/register'} className={styles.switchLink}>Create one</Link>
           </p>
         </motion.div>
       </div>

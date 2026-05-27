@@ -1,9 +1,11 @@
 import Group from '../models/Group.js';
 import User from '../models/User.js';
 import Expense from '../models/Expense.js';
+import Invitation from '../models/Invitation.js';
 import AppError from '../utils/AppError.js';
 import catchAsync from '../utils/catchAsync.js';
 import sendResponse from '../utils/sendResponse.js';
+import { sendGroupInviteEmail } from '../services/emailService.js';
 
 // @desc    Create a new group
 // @route   POST /api/groups
@@ -164,13 +166,61 @@ export const addMember = catchAsync(async (req, res, next) => {
 
   const group = req.group;
 
-  // Check if user exists (by ID or by Email)
+  // Check if input is an email or ObjectId
   const isEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userId);
   const query = isEmail ? { email: userId.toLowerCase() } : { _id: userId };
   const user = await User.findOne(query);
 
+  // --- User not found: send invitation email if email was provided ---
   if (!user) {
-    return next(new AppError('User not found with the provided ID or email', 404));
+    if (!isEmail) {
+      return next(new AppError('User not found with the provided ID', 404));
+    }
+
+    // Check for an existing pending invitation
+    const existingInvite = await Invitation.findOne({
+      email: userId.toLowerCase(),
+      group: group._id,
+      status: 'pending',
+    });
+
+    if (existingInvite) {
+      return next(
+        new AppError(
+          'An invitation has already been sent to this email address',
+          400
+        )
+      );
+    }
+
+    // Create invitation
+    const invitation = await Invitation.create({
+      email: userId.toLowerCase(),
+      group: group._id,
+      invitedBy: req.user._id,
+    });
+
+    // Build invite link
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5174';
+    const inviteLink = `${frontendUrl}/invite/${invitation.token}`;
+
+    // Send email (fire-and-forget — don't fail request if email fails)
+    try {
+      await sendGroupInviteEmail({
+        toEmail: userId.toLowerCase(),
+        inviterName: req.user.name,
+        groupName: group.name,
+        groupCategory: group.category,
+        inviteLink,
+      });
+    } catch (emailErr) {
+      console.error('Failed to send invitation email:', emailErr.message);
+    }
+
+    return sendResponse(res, 200, true,
+      `${userId} is not registered yet. An invitation email has been sent to them!`,
+      { invited: true, email: userId.toLowerCase() }
+    );
   }
 
   const actualUserId = user._id.toString();
@@ -184,7 +234,7 @@ export const addMember = catchAsync(async (req, res, next) => {
     return next(new AppError('User is already a member of this group', 400));
   }
 
-  // Add member
+  // Add member directly
   group.members.push({ user: actualUserId, isAdmin: false });
   await group.save();
 

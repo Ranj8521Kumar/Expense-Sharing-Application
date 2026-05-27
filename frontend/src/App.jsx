@@ -10,6 +10,7 @@ import { GroupDetailPage } from './pages/GroupDetailPage';
 import { ExpensesPage } from './pages/ExpensesPage';
 import { SettlementsPage } from './pages/SettlementsPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { InviteAcceptPage } from './pages/InviteAcceptPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,6 +31,9 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
           </Route>
+
+          {/* Fully public invitation route */}
+          <Route path="/invite/:token" element={<InviteAcceptPage />} />
 
           {/* Protected routes — redirect to login if not logged in */}
           <Route element={<ProtectedRoute />}>
