@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Wallet, CheckCircle } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { authApi } from '../api/auth';
 import { invitationsApi } from '../api/invitations';
 import { useAuthStore } from '../store/authStore';
@@ -14,6 +15,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const inviteToken = searchParams.get('invite'); // may be null
+  const queryClient = useQueryClient();
 
   const setAuth = useAuthStore((s) => s.setAuth);
   const [serverError, setServerError] = useState('');
@@ -30,6 +32,7 @@ export function LoginPage() {
       if (inviteToken) {
         try {
           await invitationsApi.accept(inviteToken);
+          queryClient.invalidateQueries({ queryKey: ['groups'] });
         } catch {
           // Ignore acceptance errors — user is still logged in
         }

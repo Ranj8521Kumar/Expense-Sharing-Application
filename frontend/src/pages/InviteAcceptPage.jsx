@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Users, Clock, CheckCircle, XCircle, Loader } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { invitationsApi } from '../api/invitations';
 import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/Button';
@@ -13,6 +14,7 @@ export function InviteAcceptPage() {
   const { token } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuthStore();
+  const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState(false);
@@ -45,6 +47,7 @@ export function InviteAcceptPage() {
     setAccepting(true);
     try {
       await invitationsApi.accept(token);
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
       setAccepted(true);
       setTimeout(() => navigate('/groups'), 2500);
     } catch (err) {
